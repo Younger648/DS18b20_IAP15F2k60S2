@@ -1,0 +1,76 @@
+C51 COMPILER V9.60.0.0   DS18B20                                                           04/03/2023 21:14:51 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN ..\output\ds18b20.obj
+COMPILER INVOKED BY: D:\software\keil\C51\BIN\C51.EXE ..\sourse\ds18b20.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\sourse) DEB
+                    -UG OBJECTEXTEND PRINT(.\Listings\ds18b20.lst) TABS(2) OBJECT(..\output\ds18b20.obj)
+
+line level    source
+
+   1          #include "head.h"
+   2          
+   3          unsigned int temp;
+   4          
+   5          void ds18b20_config()
+   6          {
+   7   1         unsigned char LSB,HSB;
+   8   1         
+   9   1         EA = 0;
+  10   1         init_ds18b20();
+  11   1         EA = 1;
+  12   1        
+  13   1      
+  14   1        
+  15   1         Write_DS18B20(0xcc);
+  16   1         Write_DS18B20(0x44);
+  17   1          
+  18   1      
+  19   1         delay_138(10000);
+  20   1        
+  21   1          EA = 1;
+  22   1          init_ds18b20();
+  23   1          EA = 0;
+  24   1          
+  25   1      
+  26   1        
+  27   1         Write_DS18B20(0xcc);
+  28   1         Write_DS18B20(0xbe);
+  29   1          
+  30   1      
+  31   1         LSB = Read_DS18B20();//¸ß°ËÎ»
+  32   1         HSB = Read_DS18B20();//µÍ°ËÎ»
+  33   1          
+  34   1          temp = HSB;
+  35   1          temp = (temp << 8) | LSB;
+  36   1          
+  37   1          EA = 1;
+  38   1          
+  39   1          if((temp & 0x800) == 0x0000)
+  40   1          {
+  41   2           temp >>= 4;
+  42   2           temp = temp * 10;
+  43   2           temp = temp + (LSB & 0x0f) * 0.625;
+  44   2           
+  45   2          }
+  46   1        
+  47   1      
+  48   1      }
+  49          
+  50          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    153    ----
+C51 COMPILER V9.60.0.0   DS18B20                                                           04/03/2023 21:14:51 PAGE 2   
+
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
